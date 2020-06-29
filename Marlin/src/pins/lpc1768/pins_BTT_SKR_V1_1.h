@@ -27,11 +27,11 @@
 // Limit Switches
 //
 #define X_MIN_PIN                          P1_29
-#define X_MAX_PIN                          P1_28
+#define X_MAX_PIN                          -1//P1_28
 #define Y_MIN_PIN                          P1_27
-#define Y_MAX_PIN                          P1_26
+#define Y_MAX_PIN                          -1//P1_26
 #define Z_MIN_PIN                          P1_25
-#define Z_MAX_PIN                          P1_24
+#define Z_MAX_PIN                          -1//P1_24
 
 //
 // Steppers
@@ -52,6 +52,13 @@
 #define E0_DIR_PIN                         P2_13
 #define E0_ENABLE_PIN                      P2_12
 
+//
+// Servo Pin
+//
+#ifndef SERVO0_PIN
+  #define SERVO0_PIN                       P1_23
+#endif
+
 /**
  * LCD / Controller
  *
@@ -66,8 +73,8 @@
  */
 
 #if HAS_SPI_LCD
-  #define BTN_EN1                          P3_26
-  #define BTN_EN2                          P3_25
+  #define BTN_EN1                          P0_16//P3_26
+  #define BTN_EN2                          P0_18//P3_25
   #define BTN_ENC                          P2_11
 
   #define SD_DETECT_PIN                    P1_31
