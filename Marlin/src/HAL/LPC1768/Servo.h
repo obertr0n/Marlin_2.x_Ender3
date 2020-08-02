@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 #pragma once
@@ -58,6 +58,10 @@ class libServo: public Servo {
     static_assert(COUNT(servo_delay) == NUM_SERVOS, "SERVO_DELAY must be an array NUM_SERVOS long.");
 
     if (attach(servo_info[servoIndex].Pin.nbr) >= 0) {    // try to reattach
+      /* workaround for too long pulse on the servo pin */
+      if ( (servoIndex == 0) && ( extDigitalRead(SERVO0_PIN) == 1 ) ) {
+        safe_delay(3);
+      }
       write(value);
       safe_delay(servo_delay[servoIndex]); // delay to allow servo to reach position
       TERN_(DEACTIVATE_SERVOS_AFTER_MOVE, detach());
