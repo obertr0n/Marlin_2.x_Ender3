@@ -27,7 +27,8 @@
 
 #include "../include/i2c_util.h"
 #include "../../../core/millis_t.h"
-#include "../../HAL.h"
+
+extern int millis();
 
 #ifdef __cplusplus
   extern "C" {
@@ -62,8 +63,9 @@ static void _I2C_Stop (LPC_I2C_TypeDef *I2Cx) {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-#define I2CDEV_S_ADDR    0x3C  // address is 0x3C
-#define BUFFER_SIZE      0x1   // only do single byte transfers with LCDs
+#define I2CDEV_S_ADDR   0x78  // from SSD1306  //actual address is 0x3C - shift left 1 with LSB set to 0 to indicate write
+
+#define BUFFER_SIZE                     0x1  // only do single byte transfers with LCDs
 
 I2C_M_SETUP_Type transferMCfg;
 
@@ -83,7 +85,7 @@ uint8_t u8g_i2c_start(const uint8_t sla) {
         && (I2C_status != I2C_I2STAT_M_TX_DAT_NACK));  //wait for start to be asserted
 
     LPC_I2C1->I2CONCLR = I2C_I2CONCLR_STAC; // clear start state before tansmitting slave address
-    LPC_I2C1->I2DAT = (I2C_ADDRESS(sla) & I2C_I2DAT_BITMASK); // transmit slave address & write bit
+    LPC_I2C1->I2DAT = I2CDEV_S_ADDR & I2C_I2DAT_BITMASK; // transmit slave address & write bit
     LPC_I2C1->I2CONSET = I2C_I2CONSET_AA;
     LPC_I2C1->I2CONCLR = I2C_I2CONCLR_SIC;
     while ((I2C_status != I2C_I2STAT_M_TX_SLAW_ACK)
